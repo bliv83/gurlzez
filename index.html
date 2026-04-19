@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurlzez - A Cat's Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            padding: 1rem;
+        }
+
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgb(216, 180, 254);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 56rem;
+            width: 100%;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out 0.1s backwards;
+        }
+
+        /* Image Gallery */
+        .gallery {
+            position: relative;
+            background: black;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-counter {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            color: black;
+            border: none;
+            border-radius: 9999px;
+            padding: 0.75rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .prev {
+            left: 1rem;
+        }
+
+        .next {
+            right: 1rem;
+        }
+
+        /* Content */
+        .content {
+            padding: 2rem;
+        }
+
+        .content h2 {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-weight: bold;
+            color: rgb(88, 28, 135);
+            margin-bottom: 0.75rem;
+        }
+
+        .mood-button {
+            display: inline-block;
+            background: linear-gradient(to right, rgb(244, 114, 182), rgb(168, 85, 247));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .mood-button:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .content p {
+            font-size: 1.125rem;
+            color: rgb(55, 65, 81);
+            line-height: 1.625;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Navigation */
+        .story-nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgb(126, 34, 206);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgb(147, 51, 234);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            height: 0.75rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgb(216, 180, 254);
+        }
+
+        .dot.active {
+            background: rgb(126, 34, 206);
+            width: 2rem;
+        }
+
+        .dot:not(.active) {
+            width: 0.75rem;
+        }
+
+        .dot:hover:not(.active) {
+            background: rgb(192, 132, 250);
+        }
+
+        /* Interactive Paws */
+        .interactive-section {
+            margin-top: 3rem;
+            max-width: 56rem;
+            width: 100%;
+        }
+
+        .interactive-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .interactive-box p {
+            text-align: center;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .heart-container {
+            width: 100%;
+            height: 8rem;
+            background: linear-gradient(to right, rgb(249, 168, 212), rgb(196, 181, 253));
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.3s;
+        }
+
+        .heart-container:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .heart-container-text {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: floatUp 2s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-80px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            color: rgb(216, 180, 254);
+            font-size: 0.875rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .story-nav {
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            .gallery {
+                aspect-ratio: 4 / 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="header">
+            <h1>✨ Gurlzez ✨</h1>
+            <p>A Cat's Life: From Utrecht to Johannesburg</p>
+        </div>
+
+        <div class="container">
+            <div class="gallery">
+                <img id="galleryImage" src="" alt="Gurlzez">
+                <div class="image-counter">
+                    <span id="imageCounter">1</span> / <span id="totalImages">4</span>
+                </div>
+                <button class="nav-button prev" onclick="previousImage()">‹</button>
+                <button class="nav-button next" onclick="nextImage()">›</button>
+            </div>
+
+            <div class="content">
+                <h2 id="storyTitle">Life in Utrecht</h2>
+                <button class="mood-button" onclick="toggleMood()">🎭 Mood: <span id="moodText">Nostalgic & Content</span></button>
+                <p id="storyDescription">In the beautiful city of Utrecht, Gurlzez had wonderful years exploring the canals and charming streets. She loved the cozy Dutch life, the peaceful parks, and lazy afternoons in sunny windows.</p>
+
+                <div class="story-nav">
+                    <button class="nav-btn" onclick="previousStory()">← Previous</button>
+                    <div class="progress-dots" id="progressDots"></div>
+                    <button class="nav-btn" onclick="nextStory()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-section">
+            <div class="interactive-box">
+                <p>🐾 Click the area below to show Gurlzez some love!</p>
+                <div class="heart-container" id="heartContainer">
+                    <div class="heart-container-text">Click anywhere! 💜</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with 💜 for Gurlzez and Kelly</p>
+            <p>From Utrecht with love to Johannesburg with excitement</p>
+        </footer>
+    </main>
+
+    <script>
+        const stories = [
+            {
+                title: "Life in Utrecht",
+                description: "In the beautiful city of Utrecht, Gurlzez had wonderful years exploring the canals and charming streets. She loved the cozy Dutch life, the peaceful parks, and lazy afternoons in sunny windows.",
+                images: [
+                    "public/9A014F17-A6CC-449E-BEEF-5647CDADBC30.jpg",
+                    "public/IMG_5606.jpeg",
+                    "public/IMG_5714.jpeg",
+                    "public/IMG_5647.jpeg"
+                ],
+                mood: "Nostalgic & Content"
+            },
+            {
+                title: "Adventures & Curiosity",
+                description: "Gurlzez is always on the move! Whether it's climbing to new heights, exploring every corner, or pouncing on mysterious moving things, she lives for adventure and discovery. Life is one big playground!",
+                images: [
+                    "public/IMG_5611.jpeg",
+                    "public/IMG_2843.jpeg",
+                    "public/IMG_7754.jpeg",
+                    "public/IMG_5894.jpeg"
+                ],
+                mood: "Adventurous & Playful"
+            },
+            {
+                title: "Her Love for Kelly",
+                description: "Kelly is Gurlzez's favorite person in the whole world. They share special moments together - cuddles, playtime, and that special bond that only a cat and their human can understand. Kelly means everything to her.",
+                images: [
+                    "public/IMG_2557.jpeg",
+                    "public/IMG_5816.jpeg",
+                    "public/IMG_5683.jpeg",
+                    "public/IMG_8801.jpeg"
+                ],
+                mood: "Loving & Affectionate"
+            },
+            {
+                title: "The Big Move to Johannesburg",
+                description: "After wonderful years in Utrecht, Gurlzez embarked on an exciting new adventure! Moving to Johannesburg brought new sights, new warmth, and endless possibilities. She's ready to explore Africa and make new memories with Kelly.",
+                images: [
+                    "public/IMG_2667.jpeg",
+                    "public/IMG_9483.jpeg",
+                    "public/IMG_5588.jpeg",
+                    "public/IMG_5707.jpeg",
+                    "public/IMG_8532.jpeg"
+                ],
+                mood: "Excited & Hopeful"
+            }
+        ];
+
+        let currentStory = 0;
+        let currentImage = 0;
+
+        function initializePage() {
+            // Create progress dots
+            const dotsContainer = document.getElementById("progressDots");
+            stories.forEach((_, idx) => {
+                const dot = document.createElement("button");
+                dot.className = `dot ${idx === 0 ? "active" : ""}`;
+                dot.onclick = () => goToStory(idx);
+                dotsContainer.appendChild(dot);
+            });
+
+            // Initialize heart container
+            const heartContainer = document.getElementById("heartContainer");
+            heartContainer.addEventListener("click", (e) => createHeart(e));
+
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const story = stories[currentStory];
+            const image = story.images[currentImage];
+
+            // Update image
+            document.getElementById("galleryImage").src = image;
+            document.getElementById("imageCounter").textContent = currentImage + 1;
+            document.getElementById("totalImages").textContent = story.images.length;
+
+            // Update content
+            document.getElementById("storyTitle").textContent = story.title;
+            document.getElementById("moodText").textContent = story.mood;
+            document.getElementById("storyDescription").textContent = story.description;
+
+            // Update progress dots
+            document.querySelectorAll(".dot").forEach((dot, idx) => {
+                dot.classList.toggle("active", idx === currentStory);
+            });
+
+            // Hide/show navigation buttons based on image count
+            const prevBtn = document.querySelector(".prev");
+            const nextBtn = document.querySelector(".next");
+            if (story.images.length <= 1) {
+                prevBtn.style.display = "none";
+                nextBtn.style.display = "none";
+            } else {
+                prevBtn.style.display = "block";
+                nextBtn.style.display = "block";
+            }
+        }
+
+        function nextImage() {
+            const story = stories[currentStory];
+            currentImage = (currentImage + 1) % story.images.length;
+            updateDisplay();
+        }
+
+        function previousImage() {
+            const story = stories[currentStory];
+            currentImage = (currentImage - 1 + story.images.length) % story.images.length;
+            updateDisplay();
+        }
+
+        function nextStory() {
+            currentStory = (currentStory + 1) % stories.length;
+            currentImage = 0;
+            updateDisplay();
+        }
+
+        function previousStory() {
+            currentStory = (currentStory - 1 + stories.length) % stories.length;
+            currentImage = 0;
+            updateDisplay();
+        }
+
+        function goToStory(idx) {
+            currentStory = idx;
+            currentImage = 0;
+            updateDisplay();
+        }
+
+        function toggleMood() {
+            // Just for visual feedback
+            const moodBtn = document.querySelector(".mood-button");
+            moodBtn.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                moodBtn.style.transform = "scale(1)";
+            }, 100);
+        }
+
+        function createHeart(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const heart = document.createElement("div");
+            heart.className = "floating-heart";
+            heart.textContent = "💜";
+            heart.style.left = x + "px";
+            heart.style.top = y + "px";
+
+            e.currentTarget.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 2000);
+
+            // Update text visibility
+            const text = e.currentTarget.querySelector(".heart-container-text");
+            if (text) {
+                text.style.display = "none";
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener("DOMContentLoaded", initializePage);
+    </script>
+</body>
+</html>

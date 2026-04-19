@@ -295,6 +295,76 @@
             margin: 0.5rem 0;
         }
 
+        /* Petting Tool */
+        .petting-section {
+            margin-top: 3rem;
+            max-width: 56rem;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .petting-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .petting-section p {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            color: rgb(216, 180, 254);
+        }
+
+        .petting-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            cursor: crosshair;
+        }
+
+        .petting-outline {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+            transition: filter 0.2s;
+        }
+
+        .petting-container:hover .petting-outline {
+            filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.5));
+        }
+
+        .pet-feedback {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: petPop 0.8s ease-out forwards;
+            line-height: 1;
+        }
+
+        @keyframes petPop {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.3) translateY(-40px);
+                opacity: 0;
+            }
+        }
+
+        .pet-counter {
+            margin-top: 1rem;
+            font-size: 1.125rem;
+            color: rgb(244, 114, 182);
+            font-weight: 600;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .story-nav {
@@ -312,6 +382,14 @@
 
             .gallery {
                 aspect-ratio: 4 / 3;
+            }
+
+            .petting-section {
+                padding: 1.5rem;
+            }
+
+            .petting-section h3 {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -352,6 +430,17 @@
                 <div class="heart-container" id="heartContainer">
                     <div class="heart-container-text">Click anywhere! 💜</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="petting-section">
+            <h3>🐱 Pet Gurlzez 🐱</h3>
+            <p>Click on her outline to give her digital pets and show her some love!</p>
+            <div class="petting-container" id="pettingContainer">
+                <img src="public/gurlzez-outline.png" alt="Gurlzez Outline" class="petting-outline" id="pettingOutline">
+            </div>
+            <div class="pet-counter">
+                Pets given: <span id="petCount">0</span>
             </div>
         </div>
 
@@ -524,8 +613,50 @@
             }
         }
 
+        // Petting functionality
+        let petCount = 0;
+        const petMessages = ["💜", "😸", "✨", "🐾", "💕", "😻", "🌟", "💗"];
+
+        function initializePetting() {
+            const pettingContainer = document.getElementById("pettingContainer");
+            const pettingOutline = document.getElementById("pettingOutline");
+
+            pettingOutline.addEventListener("click", (e) => {
+                const rect = pettingContainer.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Create pet feedback animation
+                const feedback = document.createElement("div");
+                feedback.className = "pet-feedback";
+                feedback.textContent = petMessages[Math.floor(Math.random() * petMessages.length)];
+                feedback.style.left = x + "px";
+                feedback.style.top = y + "px";
+
+                pettingContainer.appendChild(feedback);
+
+                // Increment counter
+                petCount++;
+                document.getElementById("petCount").textContent = petCount;
+
+                // Remove feedback after animation
+                setTimeout(() => {
+                    feedback.remove();
+                }, 800);
+
+                // Optional: Add a slight pulse effect to the outline
+                pettingOutline.style.transform = "scale(0.98)";
+                setTimeout(() => {
+                    pettingOutline.style.transform = "scale(1)";
+                }, 100);
+            });
+        }
+
         // Initialize on page load
-        window.addEventListener("DOMContentLoaded", initializePage);
+        window.addEventListener("DOMContentLoaded", () => {
+            initializePage();
+            initializePetting();
+        });
     </script>
 </body>
 </html>

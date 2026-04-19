@@ -424,17 +424,8 @@
             </div>
         </div>
 
-        <div class="interactive-section">
-            <div class="interactive-box">
-                <p>🐾 Click the area below to show Gurlzez some love!</p>
-                <div class="heart-container" id="heartContainer">
-                    <div class="heart-container-text">Click anywhere! 💜</div>
-                </div>
-            </div>
-        </div>
-
         <div class="petting-section">
-            <h3>🐱 Pet Gurlzez 🐱</h3>
+            <h3>🐱 Give Gurlzez some love 🐱</h3>
             <p>Click on her outline to give her digital pets and show her some love!</p>
             <div class="petting-container" id="pettingContainer">
                 <img src="public/gurlzez-outline.png" alt="Gurlzez Outline" class="petting-outline" id="pettingOutline">
@@ -512,10 +503,6 @@
                 dotsContainer.appendChild(dot);
             });
 
-            // Initialize heart container
-            const heartContainer = document.getElementById("heartContainer");
-            heartContainer.addEventListener("click", (e) => createHeart(e));
-
             updateDisplay();
         }
 
@@ -587,30 +574,6 @@
             setTimeout(() => {
                 moodBtn.style.transform = "scale(1)";
             }, 100);
-        }
-
-        function createHeart(e) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const heart = document.createElement("div");
-            heart.className = "floating-heart";
-            heart.textContent = "💜";
-            heart.style.left = x + "px";
-            heart.style.top = y + "px";
-
-            e.currentTarget.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 2000);
-
-            // Update text visibility
-            const text = e.currentTarget.querySelector(".heart-container-text");
-            if (text) {
-                text.style.display = "none";
-            }
         }
 
         // Petting functionality
